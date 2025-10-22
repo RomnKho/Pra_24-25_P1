@@ -65,6 +65,7 @@ class ListArray : public List<T> {
 			// en la que se encuentra el nuevo array
 			arr = aux;
 		}
+
 	public:	
 		// Funciones de list
 		// override significa que se está sobrescribiendo una función virtual
@@ -129,6 +130,9 @@ class ListArray : public List<T> {
 			for(int j = pos+1; j < size; j++) {
 				aux[j-1] = arr[j];
 			}	
+			
+			// Guardo la variable
+			T e = arr[pos];
 
 			// Elimino arr para liberar memoria
 			delete[] arr;
@@ -139,7 +143,38 @@ class ListArray : public List<T> {
 
 			// Actualizo size
 			size--;
+
+			return e;
 		}
+
+		T get(int pos) override {
+
+			if(pos < 0 || pos > size-1) 
+				throw std::out_of_range("Posición inválida");
+
+			return arr[pos];
+		}
+
+		int search(T e) override {
+			// Creo un bucle que pase por todo el array
+			for(int i = 0; i < size; i++) {
+				if(e == arr[i]) {
+					return i;
+				}
+			}
+			// Si no lo encuentra
+			return -1;
+		}
+
+		bool empty() {
+			return (size == 0);
+		}
+
+		int getSize() {
+			return size;
+		}
+
+
 };
 
 #endif 

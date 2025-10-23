@@ -25,7 +25,9 @@ class ListArray : public List<T> {
 			delete[] arr;
 		}
 
-		virtual T operator[](int pos) {
+		// Le ponemos const ya que esta función es solo de lectura
+		// no de escritura
+		T operator[](int pos) const {
 			// Si la posición está fuera de rango lanzo una excepción
 			if (pos < 0 || pos > size-1) {
 				throw std::out_of_range("Índice fuera de rango");
@@ -39,9 +41,9 @@ class ListArray : public List<T> {
 			// Es como un cout
 			// Recibe datos con << 
 			out << "[";
-			for(int i = 0; i < list.size(); i++) {
+			for(int i = 0; i < list.size; i++) {
 				out << list[i];
-				if ( i < list.size()-1) {
+				if ( i < list.size-1) {
 					out << ", ";
 				}
 			}
@@ -72,18 +74,18 @@ class ListArray : public List<T> {
 		void insert(int pos, T e) override {
 			// Lanzo una excepción si la posición no es válida
 			if(pos < 0 || pos > size) {
-				throw std::out_of_range("Posición no valida");
+				throw std::out_of_range("Posición inválida");
 			}
 
-			// Creo un array auxiliar del mismo máximo que arr
-			T* aux = new T[max];
-
-			// Si al meter e en auxiliar el tamaño va a superar
-			// al máximo, hacemos el auxiliar más grande
+			// Si el tamaño al meter e va a ser más grande que el
+			// vector, lo hago más grande
 			if(size + 1 > max) {
-				aux.resize(max+1);
-				max++;
+				// Le cambio el tamaño a arr
+				this->resize(max+1);
 			}
+
+			// Creo un vector del mismo máximo que arr
+			T *aux = new T[max];
 
 			// Copio en aux los numeros que van antes de la posición
 			// en donde quiero meter e
@@ -114,11 +116,16 @@ class ListArray : public List<T> {
 			insert(size,e);
 		}
 
-		void preppend(T e) override {
+		void prepend(T e) override {
 			insert(0,e);
 		}
 
 		T remove(int pos) override {
+			// Verificamos la posición
+			if(pos < 0 || pos > size-1) {
+				throw std::out_of_range("Posición inválida");
+			}
+			
 			// Creo un auxiliar
 			T *aux = new T[size];
 			// Le copio todos los elementos antes y despues 
@@ -166,11 +173,11 @@ class ListArray : public List<T> {
 			return -1;
 		}
 
-		bool empty() {
+		bool empty() override {
 			return (size == 0);
 		}
 
-		int getSize() {
+		int getSize() override {
 			return size;
 		}
 

@@ -25,8 +25,11 @@ class List {
 		// Busca un elemento, devuelve la posición o -1 si no lo encuentra
 		virtual int search(T e) = 0;
 
+		// Devuelve TRUE si la lista esta vacía
+		virtual bool empty() = 0;
+
 		// Devuelve el tamaño de la lista
-		virtual void size() = 0;
+		virtual int getSize() = 0;
 };
 
 #endif

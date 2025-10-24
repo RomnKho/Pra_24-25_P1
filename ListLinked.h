@@ -1,6 +1,8 @@
 #include "List.h"
 #include "Node.h"
 
+#include <ostream>
+
 template <typename T>
 class ListLinked : public List<T> {
 	private:
@@ -24,9 +26,9 @@ class ListLinked : public List<T> {
 		}
 
 		// Utilización del []
-		T operator[](int pos) {
+		T operator[](int pos) const {
 			// Gestionar las posiciones
-			if(pos < 0 || pos > sz-1) throw std::out_of_range("Posición inválida");
+			if(pos < 0 || pos > sz) throw std::out_of_range("Posición inválida");
 			// Creo un puntero que apunte a la misma dirección que first
 			Node<T> *aux = first;
 			// Bucle hasta llegar a la posición deseada
@@ -57,7 +59,7 @@ class ListLinked : public List<T> {
 		
 		void insert(int pos, T e) override {
 			// Manejo de posiciones
-                        if(pos < 0 || pos > sz-1) throw std::out_of_range("Posición inválida");
+                        if(pos < 0 || pos > sz) throw std::out_of_range("Posición inválida");
 			// Si lo quiero colocar primero
 			if(pos == 0) {
 				first = new Node<T>(e,first);
@@ -71,9 +73,9 @@ class ListLinked : public List<T> {
 				// Aux->next apuntará al nuevo nodo que
 				// apunta a su vez a donde marcaba antes aux->next
 				aux->next = new Node<T>(e,aux->next);
-				// Aumento el tamaño
-				sz++;
 			}
+			// Incremento el tamaño
+			sz++;
 		}
 
 		void append(T e) override {
@@ -95,18 +97,17 @@ class ListLinked : public List<T> {
 			// Primera posición excepción
 			if(pos == 0) {
 				first = first->next;
-				d = aux->data;
 			} else {
 				// Llego hasta la posición
-				for(int i = 0; i < pos-1; i++) {
+				for(int i = 0; i < pos; i++) {
 					prev = aux;
 					aux = aux->next;	
 				}
 				// Hago el bypass
 				prev->next = aux->next;
-				// Guardo la variable
-				d = aux->data;
 			}
+			// Guardo el dato
+			d = aux->data;
 			//Libero memoria
 			delete aux;
 			// Actualizo sz
@@ -116,8 +117,16 @@ class ListLinked : public List<T> {
 		}
 
 		T get(int pos) override {
+			// Gestiono las posiciones
+			if(pos < 0 || pos > sz-1) throw std::out_of_range("Posición inválida");
+			// Creo un auxiliar
 			Node<T> *aux = first;
-			return aux[pos];
+			// Hago un bucle que lo lleve a pos
+			for(int i = 0; i < pos; i++) {
+				aux = aux->next;
+			}
+			return aux->data;
+			
 		}
 
 		int search(T e) override {
